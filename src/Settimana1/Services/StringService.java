@@ -16,7 +16,7 @@ public class StringService {
      * @param s
      * @return
      */
-    public String inverti(String s){return null;}
+    public String inverti(String s){return "prova";}
 
 
     /**
