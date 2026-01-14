@@ -7,7 +7,7 @@ public class StringService {
      * @return
      */
     public String maiuscola(String s){
-        return "ciao";
+        return s.toUpperCase();
     }
 
     /**
@@ -16,9 +16,8 @@ public class StringService {
      * @param s
      * @return
      */
-    public String inverti(String s){
-        return null;
-    }
+    public String inverti(String s){return null;}
+
 
     /**
      * Questo metodo deve restituire il numero di vocali contenuti nella stringa in input
