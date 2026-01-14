@@ -2,6 +2,8 @@ package Settimana1.Services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringService {
     /**
@@ -168,7 +170,17 @@ public class StringService {
      * @return
      */
     public String censura(String s){
-        return null;
+
+        int l = s.length();
+
+        //creo una stringa concatenando il primo carattere, l-2 asterischi e l'ultimo carattere
+        String censored = s.substring(0,1);
+        for(int i=1; i<l-1; i++){
+            censored += "*";
+        }
+        censored += s.substring(l-1,l);
+
+        return censored;
     }
 
     /**
@@ -177,6 +189,21 @@ public class StringService {
      * @return
      */
     public String ottieniDominio(String s){
+
+        // utilizzo la regex come metodo (si potrebbe anche usare lo split sul @)
+        // verifico che il dominio abbia tot caratteri seguiti dalla chiocciola
+        // seguiti da altri tot caratteri, un punto e altri tot caratteri
+        // quest'ultima parte la salvo nel gruppo dominio
+        String regex = "\\w+@(?<domain>\\w+\\.\\w+)";
+
+        // creo un pattern e un matcher
+        Pattern pat = Pattern.compile(regex);
+        Matcher mat = pat.matcher(s);
+
+        // se cè il match ritorno il gruppo dominio
+        if (mat.matches()){
+            return mat.group("domain").toString();
+        }
         return null;
     }
 
@@ -188,7 +215,36 @@ public class StringService {
      * @return
      */
     public Boolean verificaAnagramma(String s1, String s2){
-        return null;
+
+        // utilizzo lo stesso sistema usato nel metodo comprimi
+        // (avrei dovuto crearmi un metodo unico da richiamare per tutti i casi)
+        // creo due mappe, una per parola che trovino i caratteri che contengono e in che quantità
+        String min1 = s1.toLowerCase();
+        String min2 = s2.toLowerCase();
+
+        Map<Character, Integer> chars1 = new HashMap<>();
+        Map<Character, Integer> chars2 = new HashMap<>();
+
+        for(char c: min1.toCharArray()){
+            if (!chars1.containsKey(c)){
+                chars1.put(c,1);
+            }
+            else{
+                chars1.put(c,(chars1.get(c))+1);
+            }
+        }
+
+        for(char c: min2.toCharArray()){
+            if (!chars2.containsKey(c)){
+                chars2.put(c,1);
+            }
+            else{
+                chars2.put(c,(chars2.get(c))+1);
+            }
+        }
+
+        // verifico l'uguaglianza delle mappe
+        return chars1.equals(chars2);
     }
 
     /**
@@ -198,6 +254,18 @@ public class StringService {
      * @return
      */
     public String parolaPiuLunga(String s){
-        return null;
+
+        // splitto la stringa nelle sue singole parole
+        String[] words = s.split(" ");
+        // partendo dalla prima parola itero in ordine per tutte le altre e se ne trovo una
+        // strettamente più lunga la sostituisco
+        String longest = words[0];
+        for(int i = 1; i < words.length; i++){
+            if(words[i].length()>longest.length()){
+                longest = words[i];
+            }
+        }
+
+        return longest;
     }
 }
