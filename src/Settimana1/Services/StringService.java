@@ -7,7 +7,7 @@ public class StringService {
      * @return
      */
     public String maiuscola(String s){
-        return null;
+        return "ciao";
     }
 
     /**
