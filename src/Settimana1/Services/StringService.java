@@ -56,11 +56,25 @@ public class StringService {
      * @param s
      * @return
      */
+
+    // METODO DI UTILITY che serve a rimuovere gli accenti da una stringa
+    public String removeAccents(String s){
+        s = s.replace("à","a");
+        s = s.replace("è","e");
+        s = s.replace("é","e");
+        s = s.replace("ì","i");
+        s = s.replace("ò","o");
+        s = s.replace("ù","u");
+        return s;
+    }
+
+
+
     public Boolean isPalindromo(String s){
 
-        // rimuovo gli spazi dalla stringa sostituendoli con una "stringa vuota"
-        // inoltre metto tutto in minuscolo per fare in modo che la stessa lettera maiuscola e minuscola non risulti diversa
-        String t = s.replace(" ","").toLowerCase();
+        // Rendo il testo minuscolo, rimuovo gli accenti e i caratteri speciali (incluso lo spazio vuoto)
+        String t = removeAccents(s.toLowerCase()).replaceAll("\\W","").replaceAll("_","");
+
 
         // creo due contatori, uno che parte da sinistra e uno da destra
         int i = 0;
