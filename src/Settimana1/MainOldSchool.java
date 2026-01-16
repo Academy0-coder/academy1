@@ -1,10 +1,16 @@
 package Settimana1;
 
+import Settimana1.Services.StreamService;
 import Settimana1.Services.StringService;
+import Settimana1.entities.Cliente;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainOldSchool {
     public static void main (String[] args){
         StringService stringService = new StringService();
+        StreamService streamService = new StreamService();
 
         System.out.println(stringService.maiuscola("Maiuscola"));
         System.out.println(stringService.inverti("Maiuscola"));
@@ -18,5 +24,12 @@ public class MainOldSchool {
         System.out.println(stringService.verificaAnagramma("Tokyo", "Kyoto"));
         System.out.println(stringService.parolaPiuLunga("Quale e la parola piu lunga in questa frase"));
         //Commit per pull request 2
+        Cliente cliente0 = new Cliente("Mario", "Ruopolo", "marioruopolo@example.com");
+        Cliente cliente1 = new Cliente("Maria", "Ruopolo", "marioruopolo@example.com");
+        Cliente cliente2 = new Cliente("Gianni", "Ruopolo", "marioruopolo@example.com");
+        Cliente cliente3 = new Cliente("Peppe", "Ruopolo", "marioruopolo@example.com");
+        Cliente cliente4 = new Cliente("Andrea", "Ruopolo", "marioruopolo@example.com");
+        List<Cliente> clientes = List.of(cliente0, cliente1, cliente2, cliente3, cliente4);
+        System.out.println(streamService.trovaPeppe(clientes));
     }
 }
