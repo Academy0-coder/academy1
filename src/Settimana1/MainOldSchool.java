@@ -17,6 +17,6 @@ public class MainOldSchool {
         System.out.println(stringService.ottieniDominio("email@dominio.com"));
         System.out.println(stringService.verificaAnagramma("Tokyo", "Kyoto"));
         System.out.println(stringService.parolaPiuLunga("Quale e la parola piu lunga in questa frase"));
-
+//Ciao
     }
 }
