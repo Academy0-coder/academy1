@@ -1,14 +1,17 @@
 package Settimana1.entities;
 
+import java.time.Year;
+
 public class Car {
 
     private final String make;
     private final String model;
-    private final int year;
+    private final Year year;
     private final Plate plate;
     private Gear gear;
+    private int price;
 
-    public Car(String make, String model, int year, Plate plate, Gear gear) {
+    public Car(String make, String model, Year year, Plate plate, Gear gear) {
         this.make = make;
         this.model = model;
         this.year = year;
@@ -24,7 +27,7 @@ public class Car {
         return model;
     }
 
-    public int getYear() {
+    public Year getYear() {
         return year;
     }
 
@@ -40,6 +43,14 @@ public class Car {
         this.gear = gear;
     }
 
+    public void setPrice(int price){
+        this.price = price;
+    }
+
+    public int getPrice(){
+        return price;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -50,4 +61,6 @@ public class Car {
                 ", cambio " + gear.translate() +
                 '}';
     }
+
+
 }
