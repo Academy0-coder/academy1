@@ -1,32 +1,31 @@
 package Settimana1.entities;
 
-public class Cliente {
-    private String nome;
-    private String cognome;
+public class Cliente extends Person {
     private String email;
 
-    public Cliente (String nome, String cognome, String email) {
-        this.nome = nome;
-        this.cognome = cognome;
+    public Cliente (String name, String surname, String email) {
+        super(name,surname);
         this.email = email;
     }
 
-    public Cliente() {}
-
-    public String getNome() {
-        return nome;
+    public Cliente() {
+        super();
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getName() {
+        return super.getName();
     }
 
-    public String getCognome() {
-        return cognome;
+    public void setName(String name) {
+        super.setName(name);
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public String getSurname() {
+        return super.getSurname();
+    }
+
+    public void setSurname(String surname) {
+        super.setSurname(surname);
     }
 
     public String getEmail() {
@@ -35,5 +34,13 @@ public class Cliente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                super.toString() +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

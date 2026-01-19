@@ -1,6 +1,6 @@
-package Settimana1.Services;
+package Settimana1.services;
 
-import Settimana1.Services.OOP.Days;
+import Settimana1.entities.Days;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

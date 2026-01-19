@@ -1,4 +1,4 @@
-package Settimana1.Services;
+package Settimana1.services;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -230,35 +230,9 @@ public class StringService {
      */
     public Boolean verificaAnagramma(String s1, String s2){
 
-        // utilizzo lo stesso sistema usato nel metodo comprimi
-        // (avrei dovuto crearmi un metodo unico da richiamare per tutti i casi)
-        // creo due mappe, una per parola che trovino i caratteri che contengono e in che quantità
-        String min1 = s1.toLowerCase();
-        String min2 = s2.toLowerCase();
-
-        Map<Character, Integer> chars1 = new HashMap<>();
-        Map<Character, Integer> chars2 = new HashMap<>();
-
-        for(char c: min1.toCharArray()){
-            if (!chars1.containsKey(c)){
-                chars1.put(c,1);
-            }
-            else{
-                chars1.put(c,(chars1.get(c))+1);
-            }
-        }
-
-        for(char c: min2.toCharArray()){
-            if (!chars2.containsKey(c)){
-                chars2.put(c,1);
-            }
-            else{
-                chars2.put(c,(chars2.get(c))+1);
-            }
-        }
-
-        // verifico l'uguaglianza delle mappe
-        return chars1.equals(chars2);
+        // utilizzo il metodo comprimi che conta il numero di caratteri per tipo della stringa
+        // e verifico che le due mappe siano uguali
+        return comprimi(s1).equals(comprimi(s2));
     }
 
     /**

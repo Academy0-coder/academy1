@@ -1,11 +1,8 @@
-package Settimana1.Services.OOP;
+package Settimana1.exercises.OOP;
 
-import Settimana1.Services.StringService;
+import Settimana1.entities.Days;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import static Settimana1.Services.Utility.*;
+import static Settimana1.services.Utility.*;
 
 public class EserciziOOP {
 
