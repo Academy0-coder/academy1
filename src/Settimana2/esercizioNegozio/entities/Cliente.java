@@ -68,7 +68,7 @@ public class Cliente {
                 .append(":\n");
 
         if(mappaProdotti.isEmpty()){
-            response.append("Nessun prodotto acquistato");
+            response.append("Nessun prodotto acquistato\n");
         }
 
         else{
