@@ -1,6 +1,9 @@
 package Settimana2.esercizioNegozio.entities;
 
+import Settimana2.eserciziAggiuntivi.src.entities.Movie;
+
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Negozio {
 
@@ -64,6 +67,10 @@ public class Negozio {
                 "Digitare 3 per verificare la lista di clienti e i loro id\n"+
                 "Digitare 4 per verificare la lista di clienti con i prodotti già acquistati\n"+
                 "Digitare 5 per verificare la lista di fatture\n"+
+                "Digitare 6 per visualizzare il cliente che ha speso di più\n"+
+                "Digitare 7 per visualizzare il cliente che ha acquistato più prodotti\n"+
+                "Digitare 8 per visualizzare il prodotto per cui sono stati spesi più soldi\n"+
+                "Digitare 9 per visualizzare il prodotto più acquistato\n"+
                 "Digitare qualunque altra chiave per uscire dal programma");
     }
 
@@ -142,6 +149,82 @@ public class Negozio {
                 .forEach(Fattura -> response.append(Fattura.toString()).append("\n"));
         System.out.println(response);
     }
+
+    // metodo 6
+    public void clienteSpesaMassima(){
+        Optional<Cliente> cl = listaClienti.stream()
+                .sorted(Comparator.comparing(Cliente::sumExpenses).reversed())
+                .findFirst();
+
+        if(cl.isPresent()){
+            System.out.println(cl.get());
+        }
+
+    }
+
+    // metodo 7
+    public void clienteAcquistiMassimi(){
+        Optional<Cliente> cl = listaClienti.stream()
+                .sorted(Comparator.comparing(Cliente::sumPurchases).reversed())
+                .findFirst();
+
+        if(cl.isPresent()){
+            System.out.println(cl.get());
+        }
+
+    }
+
+
+    // metodo 8
+    public void prodottoSpesaMassima(){
+        Map<Prodotto,Integer> mappa = new HashMap<>();
+
+        listaProdotti.stream()
+                        .forEach(prodotto -> mappa.put(prodotto,0));
+
+        listaClienti.stream()
+                        .map(Cliente::getMappaProdotti)
+                        .forEach(m -> m.keySet()
+                                .forEach(p -> mappa.put(p,m.get(p))));
+
+
+        Prodotto maxProdotto = mappa.keySet().stream().findFirst().get();
+        for(Prodotto p: mappa.keySet()){
+            if(p.getPrezzo()*mappa.get(p)>maxProdotto.getPrezzo()*mappa.get(maxProdotto)){
+                maxProdotto = p;
+            }
+        }
+
+        System.out.println("Il prodotto per cui son stati spesi più soldi sono i "+maxProdotto.getNome());
+
+    }
+
+    // metodo 9
+    public void prodottoAcquistiMassimi(){
+        Map<Prodotto,Integer> mappa = new HashMap<>();
+
+        listaProdotti.stream()
+                .forEach(prodotto -> mappa.put(prodotto,0));
+
+        listaClienti.stream()
+                .map(Cliente::getMappaProdotti)
+                .forEach(m -> m.keySet()
+                        .forEach(p -> mappa.put(p,m.get(p))));
+
+
+        Prodotto maxProdotto = mappa.keySet().stream().findFirst().get();
+        for(Prodotto p: mappa.keySet()){
+            if(mappa.get(p)>mappa.get(maxProdotto)){
+                maxProdotto = p;
+            }
+        }
+
+        System.out.println("Il prodotto che è stato acquistato maggiormente sono i "+maxProdotto.getNome());
+    }
+
+
+
+
 
 
     public Integer checkString(String str){
@@ -227,6 +310,44 @@ public class Negozio {
             System.out.println("L'id dev'essere un numero intero");
         }
         return null;
+    }
+
+    public void transazione(Scanner enter) {
+        String input;
+        System.out.println("Inserisci l'id del cliente");
+        input = enter.nextLine();
+        try{
+            this.findCliente(input);
+        } catch (NumberFormatException e1){
+            System.out.println("L'id dev'essere un numero intero");
+            return;
+        } catch (NoSuchElementException e2) {
+            System.out.println("Non sono presenti clienti con quest'id nella lista");
+            return;
+        }
+
+
+        Cliente cl = this.getCliente(input);
+
+        System.out.println("Inserisci l'id del prodotto");
+        input = enter.nextLine();
+        try{
+            this.findProdotto(input);
+        } catch (NumberFormatException e1){
+            System.out.println("L'id dev'essere un numero intero");
+            return;
+        } catch (NoSuchElementException e2) {
+            System.out.println("Non sono presenti prodotti con quest'id nella lista");
+            return;
+        }
+
+        Prodotto pr = this.getProdotto(input);
+
+        System.out.println("Inserisci la quantità");
+        input = enter.nextLine();
+        int q = this.checkString(input);
+        this.eseguiTransazione(cl.getId(),pr.getId(),q);
+        return;
     }
 
 

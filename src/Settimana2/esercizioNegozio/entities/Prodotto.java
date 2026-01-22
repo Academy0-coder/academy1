@@ -46,4 +46,13 @@ public class Prodotto {
     public void setQuantita(int quantita) {
         this.quantita = quantita;
     }
+
+    @Override
+    public String toString(){
+        StringBuilder message = new StringBuilder();
+        message.append("Prodotto: "+getNome()+", ")
+                .append("Id = "+this.getId());
+        return message.toString();
+    }
+
 }
