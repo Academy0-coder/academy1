@@ -1,20 +1,18 @@
 package Settimana2.esercizioNegozio.entities;
 
-import java.text.NumberFormat;
-
 public class Prodotto {
 
     private int id;
     String nome;
     double prezzo;
-    int quantità;
+    int quantita;
 
 
-    public Prodotto(int id, String nome, double prezzo, int quantità) {
+    public Prodotto(int id, String nome, double prezzo, int quantita) {
         this.id = id;
         this.nome = nome;
         this.prezzo = prezzo;
-        this.quantità = quantità;
+        this.quantita = quantita;
     }
 
     public int getId() {
@@ -41,11 +39,11 @@ public class Prodotto {
         this.prezzo = prezzo;
     }
 
-    public int getQuantità() {
-        return quantità;
+    public int getQuantita() {
+        return quantita;
     }
 
-    public void setQuantità(int quantità) {
-        this.quantità = quantità;
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
     }
 }

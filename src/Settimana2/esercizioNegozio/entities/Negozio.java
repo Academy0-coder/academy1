@@ -74,17 +74,17 @@ public class Negozio {
         Prodotto prodotto = getProdotto(idProdotto);
 
 
-        if(prodotto.getQuantità()<quantita){
+        if(prodotto.getQuantita()<quantita){
 
             System.out.printf("Attenzione, transazione non possibile, sono rimasti solo %d %s in magazzino\n",
-                    prodotto.getQuantità(),
+                    prodotto.getQuantita(),
                     prodotto.getNome().toLowerCase());
         }
         else {
 
             listaFatture.add(new Fattura(listaFatture.size()+1, idCliente, idProdotto, quantita));
 
-            prodotto.setQuantità(prodotto.getQuantità()-quantita);
+            prodotto.setQuantita(prodotto.getQuantita()-quantita);
 
 
             Map<Prodotto,Integer> mapCliente = cliente.getMappaProdotti();
@@ -110,7 +110,7 @@ public class Negozio {
                 .forEach(Prodotto -> response
                         .append(Prodotto.getNome()+": ")
                         .append("Id = "+Prodotto.getId()+", ")
-                        .append("quantità ancora in magazzino = "+Prodotto.getQuantità()+"\n"));
+                        .append("quantità ancora in magazzino = "+Prodotto.getQuantita()+"\n"));
 
         System.out.println(response);
     }
