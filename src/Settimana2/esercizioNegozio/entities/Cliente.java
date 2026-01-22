@@ -89,5 +89,21 @@ public class Cliente {
         return response.toString();
     }
 
+    public int sumExpenses(){
+        int sum = 0;
+        for(Prodotto p: mappaProdotti.keySet()){
+            sum += mappaProdotti.get(p)*p.getPrezzo();
+        }
+        return sum;
+    }
+
+    public int sumPurchases(){
+        int sum = 0;
+        for(Prodotto p: mappaProdotti.keySet()){
+            sum += mappaProdotti.get(p);
+        }
+        return sum;
+    }
+
 
 }
