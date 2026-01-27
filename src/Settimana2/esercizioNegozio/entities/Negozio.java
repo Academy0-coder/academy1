@@ -89,6 +89,66 @@ public class Negozio {
     }
 
 
+    // metodo legato al comando 2 del menù interattivo
+    // apre a sua volta un menu interattivo
+    public void visualizzaClienti(Scanner enter){
+
+        getClientsMenu();
+        String input = enter.nextLine();
+
+        switch(input){
+
+            case "1":
+                stampaClienti();
+                break;
+            case "2":
+                stampaClienteSpesaMassima();
+                break;
+            case "3":
+                stampaClienteMassimiAcquisti();
+                break;
+            case "4":
+                stampaClientiPerSpesa();
+                break;
+            case "5":
+                stampaClientiPerAcquisti();
+                break;
+            default:
+
+        }
+
+    }
+
+
+    // metodo legato al comando 3 del menù interattivo
+    // apre a sua volta un menu interattivo
+    public void visualizzaProdotti(Scanner enter){
+
+        getProductsMenu();
+        String input = enter.nextLine();
+
+        switch(input){
+
+            case "1":
+                stampaProdotti();
+                break;
+            case "2":
+                stampaProdottoSpesaMassima();
+                break;
+            case "3":
+                stampaProdottoMassimiAcquisti();
+                break;
+            case "4":
+                stampaProdottiPerSpesa();
+                break;
+            case "5":
+                stampaProdottiPerAcquisti();
+                break;
+            default:
+
+        }
+
+    }
 
 
     // metodo che serve ad eseguire una transazione
@@ -114,7 +174,8 @@ public class Negozio {
 
             // aggiorna i dati relativi alle quantità vendute di quel prodotto
             prodotto.setQuantita(prodotto.getQuantita()-quantita);
-            prodotto.setQtaVenduta(prodotto.getQtaVenduta()+quantita);
+            prodotto.setAcquistiTotali(prodotto.getAcquistiTotali()+quantita);
+            prodotto.setSpesaTotale(prodotto.getAcquistiTotali()+quantita*prodotto.getPrezzo());
             cliente.setAcquistiTotali(cliente.getAcquistiTotali()+quantita);
             cliente.setSpesaTotale(cliente.getSpesaTotale()+quantita*prodotto.getPrezzo());
 
@@ -192,60 +253,72 @@ public class Negozio {
         this.eseguiTransazione(cl,pr,num, true);
     }
 
-    // metodo legato al comando 2 del menù interattivo
-    // apre a sua volta un menu interattivo
-    public void visualizzaClienti(Scanner enter){
 
-        getClientsMenu();
-        String input = enter.nextLine();
-
-        switch(input){
-
-            case "1":
-                stampaClienti();
-                break;
-            case "2":
-                stampaClienteSpesaMassima();
-                break;
-            case "3":
-                stampaClienteMassimiAcquisti();
-                break;
-            case "4":
-                stampaClientiPerSpesa();
-                break;
-            case "5":
-                stampaClientiPerAcquisti();
-                break;
-            default:
-
-        }
-
-    }
 
     // metodo che stampa i nomi dei clienti, i loro id e la lista di prodotti acquistati
     // (in ordine di come sono stati inseriti in lista e quindi id)
     // (metodo legato al comando 2.1 del menù interattivo)
     public void stampaClienti(){
+        stampaFatturabile(listaClienti);
+    }
+
+    // metodo che stampa i nomi dei prodotti, i loro id e la quantità disponibile in magazzino
+    // (in ordine di come sono stati inseriti in lista e quindi id)
+    // (metodo legato al comando 3.1 del menù interattivo)
+    public void stampaProdotti(){
+        stampaFatturabile(listaProdotti);
+    }
+
+
+    // metodo che stampa una qualunque lista di oggetto di un tipo che estende Fatturabile
+    public void stampaFatturabile(List<? extends Fatturabile> list){
         StringBuilder response = new StringBuilder();
-        listaClienti.stream()
-                .forEach(Cliente -> response.append(Cliente.toString()).append("\n"));
-        System.out.print(response);
+        list.stream()
+                .forEach(fatturabile -> response.append(fatturabile.toString()).append("\n"));
+
+        System.out.println(response);
+
     }
 
 
     // metodo che stampa il nome del cliente che ha speso di più (con relativa spesa totale)
     // (legato al comando 2.2 del menù interattivo)
     public void stampaClienteSpesaMassima(){
-        Optional<Cliente> cl = listaClienti.stream()
-                .sorted(Comparator.comparing(Cliente::getSpesaTotale).reversed())
+        stampaFatturabileSpesaMassima(listaClienti);
+    }
+
+    // metodo che stampa il nome del prodotto per cui è stato speso di più (con relativa spesa totale)
+    // (legato al comando 3.2 del menù interattivo)
+    public void stampaProdottoSpesaMassima(){
+        stampaFatturabileSpesaMassima(listaProdotti);
+    }
+
+
+    public void stampaFatturabileSpesaMassima(List<? extends Fatturabile> list){
+        Optional<? extends Fatturabile> ft = list.stream()
+                .sorted(Comparator.comparing(Fatturabile::getSpesaTotale).reversed())
                 .findFirst();
 
-        if(cl.isPresent()){
-            System.out.println(("Il cliente che ha speso di più è:\n")
-                    .concat(cl.get().toStringSpesa()+"\n"));
+        String tipo = ft.get().getClass().getSimpleName().toLowerCase();
+        String mess = "";
+
+        switch(tipo){
+            case "cliente":
+                mess = "che ha speso";
+                break;
+            case "prodotto":
+                mess = "per cui è stato speso";
+                break;
+            default:
+        }
+
+
+        if(ft.isPresent()){
+            System.out.printf("Il %s %s di più è:%n",tipo,mess);
+            System.out.println(ft.get().toStringSpesa()+"\n");
         }
         else{
-            System.out.println("Nessun cliente presente nella lista\n");
+            System.out.printf("Nessun %s presente nella lista%n%n",tipo);
         }
 
     }
@@ -253,16 +326,40 @@ public class Negozio {
     // metodo che stampa il nome del cliente che ha acquistato più prodotti (con il numero di acquisti)
     // (legato al comando 2.3 del menù interattivo)
     public void stampaClienteMassimiAcquisti(){
-        Optional<Cliente> cl = listaClienti.stream()
-                .sorted(Comparator.comparing(Cliente::getAcquistiTotali).reversed())
+        stampaFatturabileMassimiAcquisti(listaClienti);
+    }
+
+    // metodo che stampa il nome del prodotto si cui sono state acquistate più unità (con il numero di acquisti)
+    // (legato al comando 3.3 del menù interattivo)
+    public void stampaProdottoMassimiAcquisti(){
+        stampaFatturabileMassimiAcquisti(listaProdotti);
+    }
+
+    public void stampaFatturabileMassimiAcquisti(List<? extends Fatturabile> list){
+        Optional<? extends Fatturabile> ft = list.stream()
+                .sorted(Comparator.comparing(Fatturabile::getAcquistiTotali).reversed())
                 .findFirst();
 
-        if(cl.isPresent()){
-            System.out.println(("Il cliente che ha acquistato il maggior numero di prodotti è:\n")
-                    .concat(cl.get().toStringAcquisti()+"\n"));
+        String tipo = ft.get().getClass().getSimpleName().toLowerCase();
+        String mess = "";
+
+        switch(tipo){
+            case "cliente":
+                mess = "che ha acquistato il maggior numero di prodotti";
+                break;
+            case "prodotto":
+                mess = "di cui sono state acquistate più unità";
+                break;
+            default:
+        }
+
+
+        if(ft.isPresent()){
+            System.out.printf("Il %s %s è:%n",tipo,mess);
+            System.out.println(ft.get().toStringSpesa()+"\n");
         }
         else{
-            System.out.println("Nessun cliente presente nella lista\n");
+            System.out.printf("Nessun %s presente nella lista%n%n",tipo);
         }
 
     }
@@ -270,15 +367,27 @@ public class Negozio {
     // metodo che stampa i nomi dei clienti ordinati per spesa effettuata
     // (legato al comando 2.4 del menù interattivo)
     public void stampaClientiPerSpesa(){
-        if(listaClienti.size()>0){
-            System.out.println("Ecco la lista dei clienti ordinati per spesa effettuata:");
-            listaClienti.stream()
-                    .sorted(Comparator.comparing(Cliente::getSpesaTotale).reversed())
-                    .forEach(cliente -> System.out.println(cliente.toStringSpesa()));
+        stampaFatturabilePerSpesa(listaClienti);
+    }
+
+    // metodo che stampa i nomi dei prodotti ordinati per entrate (in ordine decrescente)
+    // (legato al comando 3.4 del menù interattivo)
+    public void stampaProdottiPerSpesa(){
+        stampaFatturabilePerSpesa(listaProdotti);
+    }
+
+    public void stampaFatturabilePerSpesa(List<? extends Fatturabile> list){
+        if(list.size()>0){
+            String tipo = list.get(0).getClass().getSimpleName().toLowerCase();
+            String tipi = tipo.substring(0,tipo.length()-1).concat("i");
+            System.out.printf("Ecco la lista dei %s ordinati per spesa effettuata:%n",tipi);
+            list.stream()
+                    .sorted(Comparator.comparing(Fatturabile::getSpesaTotale).reversed())
+                    .forEach(fatturabile -> System.out.println(fatturabile.toStringSpesa()));
             System.out.println("");
         }
         else{
-            System.out.println("Nessun cliente presente nella lista\n");
+            System.out.println("Nessun elemento presente nella lista\n");
         }
 
     }
@@ -286,129 +395,27 @@ public class Negozio {
     // metodo che stampa i nomi dei clienti ordinati per acquisti effettuati
     // (legato al comando 2.5 del menù interattivo)
     public void stampaClientiPerAcquisti(){
-        if(listaClienti.size()>0){
-            System.out.println("Ecco la lista dei clienti ordinati per acquisti effettuati:");
-            listaClienti.stream()
-                    .sorted(Comparator.comparing(Cliente::getAcquistiTotali).reversed())
-                    .forEach(cliente -> System.out.println(cliente.toStringAcquisti()));
-            System.out.println("");
-        }
-        else{
-            System.out.println("Nessun cliente presente nella lista\n");
-        }
-
+        stampaFatturabilePerAcquisti(listaClienti);
     }
-
-
-    // metodo legato al comando 2 del menù interattivo
-    // apre a sua volta un menu interattivo
-    public void visualizzaProdotti(Scanner enter){
-
-        getProductsMenu();
-        String input = enter.nextLine();
-
-        switch(input){
-
-            case "1":
-                stampaProdotti();
-                break;
-            case "2":
-                stampaProdottoSpesaMassima();
-                break;
-            case "3":
-                stampaProdottoMassimiAcquisti();
-                break;
-            case "4":
-                stampaProdottiPerSpesa();
-                break;
-            case "5":
-                stampaProdottiPerAcquisti();
-                break;
-            default:
-
-        }
-
-    }
-
-    // metodo che stampa i nomi dei prodotti, i loro id e la quantità disponibile in magazzino
-    // (in ordine di come sono stati inseriti in lista e quindi id)
-    // (metodo legato al comando 3.1 del menù interattivo)
-    public void stampaProdotti(){
-        StringBuilder response = new StringBuilder();
-        listaProdotti.stream()
-                .forEach(Prodotto -> response
-                        .append(Prodotto.getNome()+": ")
-                        .append("Id = "+Prodotto.getId()+", ")
-                        .append("quantità ancora in magazzino = "+Prodotto.getQuantita()+"\n"));
-
-        System.out.println(response);
-    }
-
-    // metodo che stampa il nome del prodotto per cui è stato speso di più (con relativa spesa totale)
-    // (legato al comando 3.2 del menù interattivo)
-    public void stampaProdottoSpesaMassima(){
-        Optional<Prodotto> pr = listaProdotti.stream().max(Comparator.comparing(prodotto -> {
-            Prodotto p = (Prodotto) prodotto;
-            return p.getQtaVenduta()*p.getPrezzo();}));
-
-        if(pr.isPresent()){
-            System.out.println(("Il prodotto per cui è stato speso più denaro è:\n")
-                    .concat(pr.get().toStringSpesa()+"\n"));
-        }
-        else{
-            System.out.println("Nessun prodotto presente nella lista\n");
-        }
-
-    }
-
-    // metodo che stampa il nome del prodotto si cui sono state acquistate più unità (con il numero di acquisti)
-    // (legato al comando 3.3 del menù interattivo)
-    public void stampaProdottoMassimiAcquisti(){
-        Optional<Prodotto> pr = listaProdotti.stream()
-                .sorted(Comparator.comparing(Prodotto::getQtaVenduta).reversed())
-                .findFirst();
-
-        if(pr.isPresent()){
-            System.out.println(("Il prodotto di cui sono state acquistate più unità è:\n")
-                    .concat(pr.get().toStringAcquisti()+"\n"));
-        }
-        else{
-            System.out.println("Nessun prodotto presente nella lista\n");
-        }
-
-    }
-
-    // metodo che stampa i nomi dei prodotti ordinati per entrate (in ordine decrescente)
-    // (legato al comando 3.4 del menù interattivo)
-    public void stampaProdottiPerSpesa(){
-        if(listaProdotti.size()>0){
-            System.out.println("Ecco la lista dei prodotti ordinati per spesa effettuata:");
-            listaProdotti.stream()
-                    .sorted(Comparator.comparing(oggetto ->
-                    {Prodotto pr = (Prodotto) oggetto;
-                    return pr.getQtaVenduta()*pr.getPrezzo();}).reversed())
-                    .forEach(prodotto -> System.out.println(prodotto.toStringSpesa()));
-            System.out.println("");
-        }
-        else{
-            System.out.println("Nessun prodotto presente nella lista\n");
-        }
-
-    }
-
 
     // metodo che stampa i nomi dei prodotti ordinati per numero di acquisti (decrescente)
     // (legato al comando 3.5 del menù interattivo)
     public void stampaProdottiPerAcquisti(){
-        if(listaProdotti.size()>0){
-            System.out.println("Ecco la lista dei prodotti ordinati per numero di acquisti:");
-            listaProdotti.stream()
-                    .sorted(Comparator.comparing(Prodotto::getQtaVenduta).reversed())
-                    .forEach(prodotto -> System.out.println(prodotto.toStringAcquisti()));
+       stampaFatturabilePerAcquisti(listaProdotti);
+    }
+
+    public void stampaFatturabilePerAcquisti(List<? extends Fatturabile> list){
+        if(list.size()>0){
+            String tipo = list.get(0).getClass().getSimpleName().toLowerCase();
+            String tipi = tipo.substring(0,tipo.length()-1).concat("i");
+            System.out.printf("Ecco la lista dei %s ordinati per numero di acquisti:%n",tipi);
+            list.stream()
+                    .sorted(Comparator.comparing(Fatturabile::getAcquistiTotali).reversed())
+                    .forEach(fatturabile -> System.out.println(fatturabile.toStringAcquisti()));
             System.out.println("");
         }
         else{
-            System.out.println("Nessun prodotto presente nella lista\n");
+            System.out.println("Nessun elemento presente nella lista\n");
         }
 
     }

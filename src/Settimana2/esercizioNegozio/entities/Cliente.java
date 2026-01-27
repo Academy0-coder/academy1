@@ -5,37 +5,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class Cliente {
+public class Cliente extends Fatturabile {
 
-    private final int id;
-    private String nome;
     private String cognome;
     private Map<Prodotto,Integer> mappaProdotti;
     private List<Fattura> listaFatture;
-    private double spesaTotale;
-    private int acquistiTotali;
 
 
     public Cliente(int id, String nome, String cognome, Map<Prodotto, Integer> mappaProdotti, List<Fattura> listaFatture) {
-        this.id = id;
-        this.nome = nome;
+        super(id,nome);
         this.cognome = cognome;
         this.mappaProdotti = mappaProdotti;
         this.listaFatture = listaFatture;
-        spesaTotale = 0.0;
-        acquistiTotali = 0;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getCognome() {
@@ -62,29 +43,13 @@ public class Cliente {
         this.listaFatture = listaFatture;
     }
 
-    public int getAcquistiTotali() {
-        return acquistiTotali;
-    }
-
-    public void setAcquistiTotali(int acquistiTotali) {
-        this.acquistiTotali = acquistiTotali;
-    }
-
-    public double getSpesaTotale() {
-        return spesaTotale;
-    }
-
-    public void setSpesaTotale(double spesaTotale) {
-        this.spesaTotale = spesaTotale;
-    }
-
 
     @Override
     public String toString(){
         StringBuilder response = new StringBuilder();
-        response.append(nome+" ")
+        response.append(getNome()+" ")
                 .append(cognome+", ")
-                .append("Id = "+id)
+                .append("Id = "+getId())
                 .append(":\n");
 
         if(mappaProdotti.isEmpty()){
@@ -110,6 +75,7 @@ public class Cliente {
         return response.toString();
     }
 
+    @Override
     public String toStringSpesa(){
         StringBuilder response = new StringBuilder();
         response.append(getNome()+" ")
@@ -120,6 +86,7 @@ public class Cliente {
 
     }
 
+    @Override
     public String toStringAcquisti(){
         StringBuilder response = new StringBuilder();
         response.append(getNome()+" ")

@@ -1,6 +1,4 @@
-import Settimana2.esercizioNegozio.entities.Cliente;
 import Settimana2.esercizioNegozio.entities.Negozio;
-import Settimana2.esercizioNegozio.entities.Prodotto;
 
 public static void main(String[] args) {
 

@@ -3,39 +3,17 @@ package Settimana2.esercizioNegozio.entities;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class Prodotto {
+public class Prodotto extends Fatturabile {
 
-    private final int id;
-    private final String nome;
     private double prezzo;
     private int quantita;
-    private Genere genere;
-
-    public int getQtaVenduta() {
-        return qtaVenduta;
-    }
-
-    public void setQtaVenduta(int qtaVenduta) {
-        this.qtaVenduta = qtaVenduta;
-    }
-
-    private int qtaVenduta;
+    final private Genere genere;
 
     public Prodotto(int id, String nome, double prezzo, int quantita, Genere genere) {
-        this.id = id;
-        this.nome = nome;
-        this.prezzo = prezzo;
-        this.quantita = quantita;
+        super(id, nome);
         this.genere = genere;
-        this.qtaVenduta =0;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
+        this.quantita = quantita;
+        this.prezzo = prezzo;
     }
 
     public double getPrezzo() {
@@ -56,27 +34,31 @@ public class Prodotto {
 
     public Genere getGenere() {return genere;}
 
+
     @Override
     public String toString(){
         StringBuilder message = new StringBuilder();
-        message.append("Prodotto: "+getNome()+", ")
-                .append("Id = "+this.getId());
+        message.append("Prodotto: "+getNome()+": ")
+                .append("Id = "+getId()+", ")
+                .append("quantità ancora in magazzino = "+getQuantita());
         return message.toString();
     }
 
+    @Override
     public String toStringSpesa(){
         StringBuilder response = new StringBuilder();
         response.append(getNome()+": ")
-                .append("spesa effettuata = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getPrezzo()*getQtaVenduta()));
+                .append("spesa effettuata = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getPrezzo()* getAcquistiTotali()));
 
         return response.toString();
 
     }
 
+    @Override
     public String toStringAcquisti(){
         StringBuilder response = new StringBuilder();
         response.append(getNome()+": ")
-                .append("acquisti totali = "+getQtaVenduta());
+                .append("acquisti totali = "+ getAcquistiTotali());
 
         return response.toString();
 
