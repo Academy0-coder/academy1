@@ -1,15 +1,20 @@
 package Settimana2.esercizioNegozio.entities;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Cliente {
 
-    private int id;
+    private final int id;
     private String nome;
     private String cognome;
     private Map<Prodotto,Integer> mappaProdotti;
     private List<Fattura> listaFatture;
+    private double spesaTotale;
+    private int acquistiTotali;
+
 
     public Cliente(int id, String nome, String cognome, Map<Prodotto, Integer> mappaProdotti, List<Fattura> listaFatture) {
         this.id = id;
@@ -17,14 +22,12 @@ public class Cliente {
         this.cognome = cognome;
         this.mappaProdotti = mappaProdotti;
         this.listaFatture = listaFatture;
+        spesaTotale = 0.0;
+        acquistiTotali = 0;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -59,12 +62,29 @@ public class Cliente {
         this.listaFatture = listaFatture;
     }
 
+    public int getAcquistiTotali() {
+        return acquistiTotali;
+    }
+
+    public void setAcquistiTotali(int acquistiTotali) {
+        this.acquistiTotali = acquistiTotali;
+    }
+
+    public double getSpesaTotale() {
+        return spesaTotale;
+    }
+
+    public void setSpesaTotale(double spesaTotale) {
+        this.spesaTotale = spesaTotale;
+    }
+
+
     @Override
     public String toString(){
         StringBuilder response = new StringBuilder();
-        response.append(nome)
-                .append(" ")
-                .append(cognome)
+        response.append(nome+" ")
+                .append(cognome+", ")
+                .append("Id = "+id)
                 .append(":\n");
 
         if(mappaProdotti.isEmpty()){
@@ -72,9 +92,11 @@ public class Cliente {
         }
 
         else{
+
             response.append("Acquistati prodotti di ")
                     .append(mappaProdotti.size())
-                    .append(" tipologie diverse\n");
+                    .append(" tipologi"+(mappaProdotti.size()==1?"a":"e"))
+                    .append(" divers"+(mappaProdotti.size()==1?"a":"e")+"\n");
             mappaProdotti
                     .keySet()
                     .stream()
@@ -85,24 +107,27 @@ public class Cliente {
 
         }
 
-
         return response.toString();
     }
 
-    public int sumExpenses(){
-        int sum = 0;
-        for(Prodotto p: mappaProdotti.keySet()){
-            sum += mappaProdotti.get(p)*p.getPrezzo();
-        }
-        return sum;
+    public String toStringSpesa(){
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+" ")
+                .append(getCognome()+": ")
+                .append("spesa effettuata = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getSpesaTotale()));
+
+        return response.toString();
+
     }
 
-    public int sumPurchases(){
-        int sum = 0;
-        for(Prodotto p: mappaProdotti.keySet()){
-            sum += mappaProdotti.get(p);
-        }
-        return sum;
+    public String toStringAcquisti(){
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+" ")
+                .append(getCognome()+": ")
+                .append(getAcquistiTotali()+" prodotti acquistati");
+
+        return response.toString();
+
     }
 
 

@@ -1,9 +1,6 @@
 package Settimana2.esercizioNegozio.entities;
 
-import Settimana2.eserciziAggiuntivi.src.entities.Movie;
-
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Negozio {
 
@@ -11,13 +8,15 @@ public class Negozio {
     List<Fattura> listaFatture;
     List<Cliente> listaClienti;
 
-    Prodotto p1 = new Prodotto(1,"Pentole",26.43,1000);
-    Prodotto p2 = new Prodotto(2,"Coperchi",5.78,500);
-    Prodotto p3 = new Prodotto(3,"Diavoli",666.66,666);
-    Prodotto p4 = new Prodotto(4,"Mestoli",8.02,200);
-    Prodotto p5 = new Prodotto(5,"Scolapasta",11.00,700);
-    Prodotto p6 = new Prodotto(6,"Vasi",74.00,1);
-    Prodotto p7 = new Prodotto(7,"Centrini",9.99,10000);
+    Prodotto p1 = new Prodotto(1,"Pentole",26.43,374, Genere.F);
+    Prodotto p2 = new Prodotto(2,"Coperchi",5.78,219, Genere.M);
+    Prodotto p3 = new Prodotto(3,"Padelle",19.57,180, Genere.F);
+    Prodotto p4 = new Prodotto(4,"Mestoli",5.02,63, Genere.M);
+    Prodotto p5 = new Prodotto(5,"Scolapasta",9.00,120, Genere.M);
+    Prodotto p6 = new Prodotto(6,"Vasi",28.49,29, Genere.M);
+    Prodotto p7 = new Prodotto(7,"Centrini",3.99,250, Genere.M);
+    Prodotto p8 = new Prodotto(8,"Lavatrici",639.00,17, Genere.F);
+    Prodotto p9 = new Prodotto(9,"Pile AAA", 2.25, 155, Genere.F);
 
     Cliente c1 = new Cliente(1,"Francesco","Rossi", new HashMap<>(), new ArrayList<>());
     Cliente c2 = new Cliente(2,"Roberto","Rossi", new HashMap<>(), new ArrayList<>());
@@ -29,7 +28,7 @@ public class Negozio {
 
     //constructor
     public Negozio() {
-        listaProdotti = List.of(p1,p2,p3,p4,p5,p6,p7);
+        listaProdotti = List.of(p1,p2,p3,p4,p5,p6,p7,p8,p9);
         listaFatture = new ArrayList<>();
         listaClienti = List.of(c1,c2,c3,c4,c5,c6,c7);
     }
@@ -63,19 +62,38 @@ public class Negozio {
     // stampa menù interattivo
     public void getInteractiveMenu(){
         System.out.println("Digitare 1 per effettuare una nuova transazione\n" +
-                "Digitare 2 per verificare la lista di prodotti, i loro id e le quantità rimaste in magazzino\n"+
-                "Digitare 3 per verificare la lista di clienti e i loro id\n"+
-                "Digitare 4 per verificare la lista di clienti con i prodotti già acquistati\n"+
-                "Digitare 5 per verificare la lista di fatture\n"+
-                "Digitare 6 per visualizzare il cliente che ha speso di più\n"+
-                "Digitare 7 per visualizzare il cliente che ha acquistato più prodotti\n"+
-                "Digitare 8 per visualizzare il prodotto per cui sono stati spesi più soldi\n"+
-                "Digitare 9 per visualizzare il prodotto più acquistato\n"+
+                "Digitare 2 per visualizzare informazioni relative ai clienti\n"+
+                "Digitare 3 per visualizzare informazioni relative ai prodotti\n"+
+                "Digitare 4 per visualizzare la lista delle fatture emesse\n"+
                 "Digitare qualunque altra chiave per uscire dal programma");
     }
 
-    // metodo 1
-    public void eseguiTransazione(int idCliente, int idProdotto, int quantita){
+
+    public void getClientsMenu(){
+        System.out.println("Digitare 1 per visualizzare la lista di clienti, i loro id e i prodotti che hanno acquistato\n"+
+                "Digitare 2 per visualizzare il cliente che ha speso di più\n"+
+                "Digitare 3 per visualizzare il cliente che ha acquistato più prodotti\n"+
+                "Digitare 4 per visualizzare la lista di clienti in ordine decrescente per spesa effettuata\n"+
+                "Digitare 5 per visualizzare la lista di clienti in ordine decrescente per numero di prodotti acqusitati\n"+
+                "Digitare qualunque altra chiave per tornare al menù principale");
+    }
+
+
+    public void getProductsMenu(){
+        System.out.println("Digitare 1 per visualizzare la lista di prodotti, i loro id, il loro prezzo e le quantità rimaste in magazzino\n"+
+                "Digitare 2 per visualizzare il prodotto per cui è stati spesi più denaro\n"+
+                "Digitare 3 per visualizzare il prodotto per cui sono state acquistate più unità\n"+
+                "Digitare 4 per visualizzare la lista di prodotti in ordine decrescente per la quantità di denaro spesa\n"+
+                "Digitare 5 per visualizzare la lsita di prodotti in ordine decrescente per il numero di unità acquistate\n"+
+                "Digitare qualunque altra chiave per tornare al menù principale");
+    }
+
+
+
+
+    // metodo che serve ad eseguire una transazione
+    // prende in input idCliente, idProdotto e quantità
+    public void eseguiTransazione(int idCliente, int idProdotto, int quantita, boolean print){
 
         Cliente cliente = getCliente(idCliente);
         Prodotto prodotto = getProdotto(idProdotto);
@@ -83,19 +101,27 @@ public class Negozio {
 
         if(prodotto.getQuantita()<quantita){
 
+            // se non ci sono abbastanza unità nel magazzino stampa messaggio di avviso e "annulla" l'operazione
             System.out.printf("Attenzione, transazione non possibile, sono rimasti solo %d %s in magazzino\n",
                     prodotto.getQuantita(),
                     prodotto.getNome().toLowerCase());
         }
         else {
 
+            // crea una nuova fattura intestata al cliente, con il tipo di prodotto
+            // la quantità di prodotti acquistati, il costo iniziale e quello maggiorato di IVA
             listaFatture.add(new Fattura(listaFatture.size()+1, idCliente, idProdotto, quantita));
 
+            // aggiorna i dati relativi alle quantità vendute di quel prodotto
             prodotto.setQuantita(prodotto.getQuantita()-quantita);
-
+            prodotto.setQtaVenduta(prodotto.getQtaVenduta()+quantita);
+            cliente.setAcquistiTotali(cliente.getAcquistiTotali()+quantita);
+            cliente.setSpesaTotale(cliente.getSpesaTotale()+quantita*prodotto.getPrezzo());
 
             Map<Prodotto,Integer> mapCliente = cliente.getMappaProdotti();
 
+
+            // aggiorna la mappa che tiene traccia dei prodotti acquistati dai clienti e le loro rispettive quantità
             if(mapCliente.containsKey(prodotto)){
                 mapCliente.put(prodotto,mapCliente.get(prodotto)+quantita);
             }
@@ -103,15 +129,211 @@ public class Negozio {
                 mapCliente.put(prodotto,quantita);
             }
 
-            System.out.println("Transazione eseguita correttamente");
+            if(print){
+                System.out.println("Transazione eseguita correttamente");
+            }
+
 
         }
 
 
     }
 
-    // metodo 2
-    public void visualizzaProdotti(){
+    // metodo che ha come fine quello di eseguire una transazione
+    // prende in input i dati inseriti dall'utente (è legato al comando 1 del menù interattivo)
+    public void eseguiTransazione(Scanner enter) {
+
+        String input;
+
+        // richiesta all'utente di inserire l'id del cliente e verifica che sia valido
+        System.out.println("Inserisci l'id del cliente");
+        input = enter.nextLine();
+        try{
+            this.getCliente(input);
+        } catch (NumberFormatException e1){
+            System.out.println("L'id dev'essere un numero intero");
+            return;
+        } catch (NoSuchElementException e2) {
+            System.out.println("Non sono presenti clienti con quest'id nella lista");
+            return;
+        }
+
+        int cl = this.getCliente(input).getId();
+
+        // richiesta all'utente di inserire l'id del prodotto e verifica che sia valido
+        System.out.println("Inserisci l'id del prodotto");
+        input = enter.nextLine();
+        try{
+            this.getProdotto(input);
+        } catch (NumberFormatException e1){
+            System.out.println("L'id dev'essere un numero intero");
+            return;
+        } catch (NoSuchElementException e2) {
+            System.out.println("Non sono presenti prodotti con quest'id nella lista");
+            return;
+        }
+
+        int pr = this.getProdotto(input).getId();
+
+        // richiesta all'utente di inserire la quantità di prodotti e verifica che sia valido
+        System.out.println("Inserisci la quantità");
+        input = enter.nextLine();
+        try{
+            Integer.parseInt(input);
+        }
+        catch(NumberFormatException e){
+            System.out.println("L'id dev'essere un numero intero");
+            return;
+        }
+
+        int num = Integer.parseInt(input);
+
+        // se i dati sono validi richiamiamo il metodo esegui transazione con i dati inseriti dall'utente
+        this.eseguiTransazione(cl,pr,num, true);
+    }
+
+    // metodo legato al comando 2 del menù interattivo
+    // apre a sua volta un menu interattivo
+    public void visualizzaClienti(Scanner enter){
+
+        getClientsMenu();
+        String input = enter.nextLine();
+
+        switch(input){
+
+            case "1":
+                stampaClienti();
+                break;
+            case "2":
+                stampaClienteSpesaMassima();
+                break;
+            case "3":
+                stampaClienteMassimiAcquisti();
+                break;
+            case "4":
+                stampaClientiPerSpesa();
+                break;
+            case "5":
+                stampaClientiPerAcquisti();
+                break;
+            default:
+
+        }
+
+    }
+
+    // metodo che stampa i nomi dei clienti, i loro id e la lista di prodotti acquistati
+    // (in ordine di come sono stati inseriti in lista e quindi id)
+    // (metodo legato al comando 2.1 del menù interattivo)
+    public void stampaClienti(){
+        StringBuilder response = new StringBuilder();
+        listaClienti.stream()
+                .forEach(Cliente -> response.append(Cliente.toString()).append("\n"));
+        System.out.print(response);
+    }
+
+
+    // metodo che stampa il nome del cliente che ha speso di più (con relativa spesa totale)
+    // (legato al comando 2.2 del menù interattivo)
+    public void stampaClienteSpesaMassima(){
+        Optional<Cliente> cl = listaClienti.stream()
+                .sorted(Comparator.comparing(Cliente::getSpesaTotale).reversed())
+                .findFirst();
+
+        if(cl.isPresent()){
+            System.out.println(("Il cliente che ha speso di più è:\n")
+                    .concat(cl.get().toStringSpesa()+"\n"));
+        }
+        else{
+            System.out.println("Nessun cliente presente nella lista\n");
+        }
+
+    }
+
+    // metodo che stampa il nome del cliente che ha acquistato più prodotti (con il numero di acquisti)
+    // (legato al comando 2.3 del menù interattivo)
+    public void stampaClienteMassimiAcquisti(){
+        Optional<Cliente> cl = listaClienti.stream()
+                .sorted(Comparator.comparing(Cliente::getAcquistiTotali).reversed())
+                .findFirst();
+
+        if(cl.isPresent()){
+            System.out.println(("Il cliente che ha acquistato il maggior numero di prodotti è:\n")
+                    .concat(cl.get().toStringAcquisti()+"\n"));
+        }
+        else{
+            System.out.println("Nessun cliente presente nella lista\n");
+        }
+
+    }
+
+    // metodo che stampa i nomi dei clienti ordinati per spesa effettuata
+    // (legato al comando 2.4 del menù interattivo)
+    public void stampaClientiPerSpesa(){
+        if(listaClienti.size()>0){
+            System.out.println("Ecco la lista dei clienti ordinati per spesa effettuata:");
+            listaClienti.stream()
+                    .sorted(Comparator.comparing(Cliente::getSpesaTotale).reversed())
+                    .forEach(cliente -> System.out.println(cliente.toStringSpesa()));
+            System.out.println("");
+        }
+        else{
+            System.out.println("Nessun cliente presente nella lista\n");
+        }
+
+    }
+
+    // metodo che stampa i nomi dei clienti ordinati per acquisti effettuati
+    // (legato al comando 2.5 del menù interattivo)
+    public void stampaClientiPerAcquisti(){
+        if(listaClienti.size()>0){
+            System.out.println("Ecco la lista dei clienti ordinati per acquisti effettuati:");
+            listaClienti.stream()
+                    .sorted(Comparator.comparing(Cliente::getAcquistiTotali).reversed())
+                    .forEach(cliente -> System.out.println(cliente.toStringAcquisti()));
+            System.out.println("");
+        }
+        else{
+            System.out.println("Nessun cliente presente nella lista\n");
+        }
+
+    }
+
+
+    // metodo legato al comando 2 del menù interattivo
+    // apre a sua volta un menu interattivo
+    public void visualizzaProdotti(Scanner enter){
+
+        getProductsMenu();
+        String input = enter.nextLine();
+
+        switch(input){
+
+            case "1":
+                stampaProdotti();
+                break;
+            case "2":
+                stampaProdottoSpesaMassima();
+                break;
+            case "3":
+                stampaProdottoMassimiAcquisti();
+                break;
+            case "4":
+                stampaProdottiPerSpesa();
+                break;
+            case "5":
+                stampaProdottiPerAcquisti();
+                break;
+            default:
+
+        }
+
+    }
+
+    // metodo che stampa i nomi dei prodotti, i loro id e la quantità disponibile in magazzino
+    // (in ordine di come sono stati inseriti in lista e quindi id)
+    // (metodo legato al comando 3.1 del menù interattivo)
+    public void stampaProdotti(){
         StringBuilder response = new StringBuilder();
         listaProdotti.stream()
                 .forEach(Prodotto -> response
@@ -122,107 +344,84 @@ public class Negozio {
         System.out.println(response);
     }
 
-    // metodo 3
-    public void visualizzaClienti(){
-        StringBuilder response = new StringBuilder();
-        listaClienti.stream()
-                .forEach(Cliente -> response
-                        .append(Cliente.getNome()+" ")
-                        .append(Cliente.getCognome()+": ")
-                        .append("Id = "+Cliente.getId()+"\n"));
+    // metodo che stampa il nome del prodotto per cui è stato speso di più (con relativa spesa totale)
+    // (legato al comando 3.2 del menù interattivo)
+    public void stampaProdottoSpesaMassima(){
+        Optional<Prodotto> pr = listaProdotti.stream().max(Comparator.comparing(prodotto -> {
+            Prodotto p = (Prodotto) prodotto;
+            return p.getQtaVenduta()*p.getPrezzo();}));
 
-        System.out.println(response);
+        if(pr.isPresent()){
+            System.out.println(("Il prodotto per cui è stato speso più denaro è:\n")
+                    .concat(pr.get().toStringSpesa()+"\n"));
+        }
+        else{
+            System.out.println("Nessun prodotto presente nella lista\n");
+        }
+
     }
 
-    // metodo 4
-    public void stampaClienti(){
-        StringBuilder response = new StringBuilder();
-        listaClienti.stream()
-                .forEach(Cliente -> response.append(Cliente.toString()).append("\n"));
-        System.out.println(response);
+    // metodo che stampa il nome del prodotto si cui sono state acquistate più unità (con il numero di acquisti)
+    // (legato al comando 3.3 del menù interattivo)
+    public void stampaProdottoMassimiAcquisti(){
+        Optional<Prodotto> pr = listaProdotti.stream()
+                .sorted(Comparator.comparing(Prodotto::getQtaVenduta).reversed())
+                .findFirst();
+
+        if(pr.isPresent()){
+            System.out.println(("Il prodotto di cui sono state acquistate più unità è:\n")
+                    .concat(pr.get().toStringAcquisti()+"\n"));
+        }
+        else{
+            System.out.println("Nessun prodotto presente nella lista\n");
+        }
+
     }
 
-    // metodo 5
+    // metodo che stampa i nomi dei prodotti ordinati per entrate (in ordine decrescente)
+    // (legato al comando 3.4 del menù interattivo)
+    public void stampaProdottiPerSpesa(){
+        if(listaProdotti.size()>0){
+            System.out.println("Ecco la lista dei prodotti ordinati per spesa effettuata:");
+            listaProdotti.stream()
+                    .sorted(Comparator.comparing(oggetto ->
+                    {Prodotto pr = (Prodotto) oggetto;
+                    return pr.getQtaVenduta()*pr.getPrezzo();}).reversed())
+                    .forEach(prodotto -> System.out.println(prodotto.toStringSpesa()));
+            System.out.println("");
+        }
+        else{
+            System.out.println("Nessun prodotto presente nella lista\n");
+        }
+
+    }
+
+
+    // metodo che stampa i nomi dei prodotti ordinati per numero di acquisti (decrescente)
+    // (legato al comando 3.5 del menù interattivo)
+    public void stampaProdottiPerAcquisti(){
+        if(listaProdotti.size()>0){
+            System.out.println("Ecco la lista dei prodotti ordinati per numero di acquisti:");
+            listaProdotti.stream()
+                    .sorted(Comparator.comparing(Prodotto::getQtaVenduta).reversed())
+                    .forEach(prodotto -> System.out.println(prodotto.toStringAcquisti()));
+            System.out.println("");
+        }
+        else{
+            System.out.println("Nessun prodotto presente nella lista\n");
+        }
+
+    }
+
+
+    // metodo che stampa le fatture effettuate
+    // (legato al comando 4 del menù interattivo)
     public void stampaFatture(){
         StringBuilder response = new StringBuilder();
         listaFatture.stream()
                 .forEach(Fattura -> response.append(Fattura.toString()).append("\n"));
         System.out.println(response);
     }
-
-    // metodo 6
-    public void clienteSpesaMassima(){
-        Optional<Cliente> cl = listaClienti.stream()
-                .sorted(Comparator.comparing(Cliente::sumExpenses).reversed())
-                .findFirst();
-
-        if(cl.isPresent()){
-            System.out.println(cl.get());
-        }
-
-    }
-
-    // metodo 7
-    public void clienteAcquistiMassimi(){
-        Optional<Cliente> cl = listaClienti.stream()
-                .sorted(Comparator.comparing(Cliente::sumPurchases).reversed())
-                .findFirst();
-
-        if(cl.isPresent()){
-            System.out.println(cl.get());
-        }
-
-    }
-
-
-    // metodo 8
-    public void prodottoSpesaMassima(){
-        Map<Prodotto,Integer> mappa = new HashMap<>();
-
-        listaProdotti.stream()
-                        .forEach(prodotto -> mappa.put(prodotto,0));
-
-        listaClienti.stream()
-                        .map(Cliente::getMappaProdotti)
-                        .forEach(m -> m.keySet()
-                                .forEach(p -> mappa.put(p,m.get(p))));
-
-
-        Prodotto maxProdotto = mappa.keySet().stream().findFirst().get();
-        for(Prodotto p: mappa.keySet()){
-            if(p.getPrezzo()*mappa.get(p)>maxProdotto.getPrezzo()*mappa.get(maxProdotto)){
-                maxProdotto = p;
-            }
-        }
-
-        System.out.println("Il prodotto per cui son stati spesi più soldi sono i "+maxProdotto.getNome());
-
-    }
-
-    // metodo 9
-    public void prodottoAcquistiMassimi(){
-        Map<Prodotto,Integer> mappa = new HashMap<>();
-
-        listaProdotti.stream()
-                .forEach(prodotto -> mappa.put(prodotto,0));
-
-        listaClienti.stream()
-                .map(Cliente::getMappaProdotti)
-                .forEach(m -> m.keySet()
-                        .forEach(p -> mappa.put(p,m.get(p))));
-
-
-        Prodotto maxProdotto = mappa.keySet().stream().findFirst().get();
-        for(Prodotto p: mappa.keySet()){
-            if(mappa.get(p)>mappa.get(maxProdotto)){
-                maxProdotto = p;
-            }
-        }
-
-        System.out.println("Il prodotto che è stato acquistato maggiormente sono i "+maxProdotto.getNome());
-    }
-
-
 
 
 
@@ -261,28 +460,6 @@ public class Negozio {
         return getCliente(checkString(idS));
     }
 
-    public void findCliente(String id){
-
-        int idN = Integer.parseInt(id);
-
-        Optional<Cliente> opt = listaClienti.stream()
-                .filter(Cliente -> Cliente.getId() == idN)
-                .findFirst();
-
-        Cliente cl = opt.get();
-    }
-
-    public void findProdotto(String id){
-
-        int idN = Integer.parseInt(id);
-
-        Optional<Prodotto> opt = listaProdotti.stream()
-                .filter(Prodotto -> Prodotto.getId() == idN)
-                .findFirst();
-
-        Prodotto pr = opt.get();
-    }
-
     public Prodotto getProdotto(int id){
 
         Optional<Prodotto> opt = listaProdotti.stream()
@@ -312,45 +489,48 @@ public class Negozio {
         return null;
     }
 
-    public void transazione(Scanner enter) {
+    // METODO IMPORTANTE
+    // viene richiamato nel main e permette di avviaare il programma gestendo tutti  i metodi interni
+    // si occupa di gestire il menù interattivo base (delegando i sottolivelli ad altri metodi)
+    // gestisce gli input dell'utente e termina il programma se l'input inserito non è associato alle opzioni prestabilite
+    public void avviaProgramma(Scanner enter){
+
+        System.out.println("Gentile utente, benvenuto nel portale per la gestione del negozio\n");
+        boolean operative = true;
         String input;
-        System.out.println("Inserisci l'id del cliente");
-        input = enter.nextLine();
-        try{
-            this.findCliente(input);
-        } catch (NumberFormatException e1){
-            System.out.println("L'id dev'essere un numero intero");
-            return;
-        } catch (NoSuchElementException e2) {
-            System.out.println("Non sono presenti clienti con quest'id nella lista");
-            return;
+
+        while(operative==true){
+
+            getInteractiveMenu();
+            input = enter.nextLine();
+
+            switch(input){
+                case "1":
+                    eseguiTransazione(enter);
+                    break;
+
+                case "2":
+                    visualizzaClienti(enter);
+                    break;
+
+                case "3":
+                    visualizzaProdotti(enter);
+                    break;
+
+                case "4":
+                    stampaFatture();
+                    break;
+
+                default:
+                    operative = false;
+
+            }
+
         }
 
+        System.out.println("Grazie e arrivederci");
 
-        Cliente cl = this.getCliente(input);
-
-        System.out.println("Inserisci l'id del prodotto");
-        input = enter.nextLine();
-        try{
-            this.findProdotto(input);
-        } catch (NumberFormatException e1){
-            System.out.println("L'id dev'essere un numero intero");
-            return;
-        } catch (NoSuchElementException e2) {
-            System.out.println("Non sono presenti prodotti con quest'id nella lista");
-            return;
-        }
-
-        Prodotto pr = this.getProdotto(input);
-
-        System.out.println("Inserisci la quantità");
-        input = enter.nextLine();
-        int q = this.checkString(input);
-        this.eseguiTransazione(cl.getId(),pr.getId(),q);
-        return;
     }
-
-
 
 
 }

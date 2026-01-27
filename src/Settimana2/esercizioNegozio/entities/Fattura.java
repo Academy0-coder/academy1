@@ -65,14 +65,27 @@ public class Fattura {
     @Override
     public String toString(){
 
-        int quantita = Math.toIntExact(Math.round(imponibile / store.getProdotto(idProdotto).getPrezzo()));
-        String nomeProdotto = store.getProdotto(idProdotto).getNome().toLowerCase();
+        Prodotto p = store.getProdotto(idProdotto);
+        int quantita = Math.toIntExact(Math.round(imponibile / p.getPrezzo()));
+        String nomeProdotto = p.getNome().toLowerCase();
         Cliente c = store.getCliente(idCliente);
+        String desinenza;
+        String verbo = quantita==1?"È":"Sono";
+
+        if(quantita==1&&p.getGenere()==Genere.F){
+            desinenza = "a";
+        } else if (quantita==1&&p.getGenere()==Genere.M) {
+            desinenza = "o";
+        } else if (p.getGenere()==Genere.F) {
+            desinenza = "e";
+        } else {
+            desinenza = "i";
+        }
 
         StringBuilder message = new StringBuilder();
         message.append("Fattura n° "+id+":\n")
                 .append("Intestata a "+c.getNome()+" "+c.getCognome()+"\n")
-                .append("Sono stati comprati "+quantita+" "+nomeProdotto+"\n")
+                .append(verbo+" stat"+desinenza+" comprat"+desinenza+" "+quantita+" "+nomeProdotto+"\n")
                 .append("Imponibile: "+prezzo.format(imponibile)+"\n")
                 .append("Totale(IVA inclusa): "+prezzo.format(totale)+"\n");
 
