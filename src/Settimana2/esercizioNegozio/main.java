@@ -1,4 +1,4 @@
-import Settimana2.esercizioNegozio.entities.Negozio;
+import Settimana2.esercizioNegozio.services.Negozio;
 
 public static void main(String[] args) {
 

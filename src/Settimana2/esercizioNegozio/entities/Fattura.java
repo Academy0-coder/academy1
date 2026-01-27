@@ -1,5 +1,7 @@
 package Settimana2.esercizioNegozio.entities;
 
+import Settimana2.esercizioNegozio.services.Negozio;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 
