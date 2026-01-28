@@ -1,6 +1,7 @@
 package Settimana2.exercises.OOP;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EserciziOOP {
@@ -26,7 +27,55 @@ public class EserciziOOP {
         return 8-n;
     }
 
+    // 7 If you modeled a chess board in Java using a two-dimensional array, how could you
+    //convert chess notation, or coordinate notation of chess, to an element in that two-dimensional array?
+    //For example, in the chess board image below, square a8 might map to
+    //array[0][0], and h1 might map to array[7][7]. Make a method that takes an input String of a
+    //chess coordinate and returns array coordinates. This exercise simply builds on the previous two.
+    public class Chessboard{
+
+        private String[][] chessboard;
+
+        public Chessboard(){
+            String[][] chessboard = new String[8][8];
+            for(int i=0;i<8;i++){
+                for(int j=0;j<8;j++){
+                    String x = Character.toString('a'+i);
+                    String y = Character.toString('8'-j);
+                    chessboard[i][j] = x.concat(y);
+                }
+            }
+            Pattern pat = Pattern.compile("[a-h][1-8]");
+            this.chessboard=chessboard;
+        }
+
+        public String[][] getChessboard() {
+            return chessboard;
+        }
+
+        public String getCell (String cell){
+            if(Pattern.matches("[a-h][1-8]",cell)){
+                int[] coord = new int[2];
+                coord [0] = cell.toCharArray()[0]-'a';
+                coord [1] = '8'-cell.toCharArray()[1];
+                return String.valueOf(coord[0]).concat(",").concat(String.valueOf(coord[1]));
+
+            }
+            return null;
+        }
+    }
+
+
     static void main(String[] args) {
+
+        EserciziOOP ex = new EserciziOOP();
+        EserciziOOP.Chessboard chessboard = ex.new Chessboard();
+
+        System.out.println(chessboard.getCell("a8"));
+        System.out.println(chessboard.getCell("h1"));
+        System.out.println(chessboard.getCell("g5"));
+        System.out.println(chessboard.getCell("d4"));
+
 
     }
 
