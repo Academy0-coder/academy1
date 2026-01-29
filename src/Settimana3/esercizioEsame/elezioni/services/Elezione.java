@@ -1,6 +1,6 @@
-package Settimana3.EsercizioEsame.elezioni.services;
+package Settimana3.esercizioEsame.elezioni.services;
 
-import Settimana3.EsercizioEsame.elezioni.entities.*;
+import Settimana3.esercizioEsame.elezioni.entities.*;
 
 
 import java.util.Collection;

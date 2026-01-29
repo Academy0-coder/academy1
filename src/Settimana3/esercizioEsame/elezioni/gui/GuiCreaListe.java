@@ -1,7 +1,7 @@
-package Settimana3.EsercizioEsame.elezioni.gui;
+package Settimana3.esercizioEsame.elezioni.gui;
 
-import Settimana3.EsercizioEsame.elezioni.entities.*;
-import Settimana3.EsercizioEsame.elezioni.services.*;
+import Settimana3.esercizioEsame.elezioni.entities.*;
+import Settimana3.esercizioEsame.elezioni.services.*;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;

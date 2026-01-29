@@ -1,4 +1,4 @@
-package Settimana3.EsercizioEsame.elezioni.services;
+package Settimana3.esercizioEsame.elezioni.services;
 
 public class ListaNonValida extends RuntimeException {
     public ListaNonValida() {super();}

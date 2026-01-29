@@ -1,6 +1,6 @@
-package Settimana3.EsercizioEsame.elezioni.entities;
+package Settimana3.esercizioEsame.elezioni.entities;
 
-import Settimana3.EsercizioEsame.elezioni.services.CandidatoNonValido;
+import Settimana3.esercizioEsame.elezioni.services.CandidatoNonValido;
 
 import java.util.ArrayList;
 import java.util.List;

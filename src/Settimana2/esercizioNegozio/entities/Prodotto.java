@@ -40,6 +40,7 @@ public class Prodotto extends Fatturabile {
         StringBuilder message = new StringBuilder();
         message.append("Prodotto: "+getNome()+": ")
                 .append("Id = "+getId()+", ")
+                .append("Prezzo = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getPrezzo())+", ")
                 .append("quantità ancora in magazzino = "+getQuantita());
         return message.toString();
     }

@@ -1,4 +1,4 @@
-package Settimana3.EsercizioEsame.elezioni.entities;
+package Settimana3.esercizioEsame.elezioni.entities;
 
 
 import java.util.Optional;

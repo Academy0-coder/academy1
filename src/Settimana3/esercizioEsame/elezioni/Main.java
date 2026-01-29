@@ -1,6 +1,6 @@
-package Settimana3.EsercizioEsame.elezioni;
+package Settimana3.esercizioEsame.elezioni;
 
-import Settimana3.EsercizioEsame.elezioni.gui.GuiCreaListe;
+import Settimana3.esercizioEsame.elezioni.gui.GuiCreaListe;
 
 public class Main {
 

@@ -17,9 +17,7 @@ public class ClienteService {
 
     // metodo che stampa il nome del cliente che ha speso di più (con relativa spesa totale)
     // (legato al comando 2.2 del menù interattivo)
-    public void stampaClienteSpesaMassima(List<Cliente> list){
-        fs.stampaFatturabileSpesaMassima(list);
-    }
+    public void stampaClienteSpesaMassima(List<Cliente> list){fs.stampaFatturabileSpesaMassima(list);}
 
     // metodo che stampa il nome del cliente che ha acquistato più prodotti (con il numero di acquisti)
     // (legato al comando 2.3 del menù interattivo)
@@ -29,9 +27,11 @@ public class ClienteService {
 
     // metodo che stampa i nomi dei clienti ordinati per spesa effettuata
     // (legato al comando 2.4 del menù interattivo)
-    public void stampaClientiPerSpesa(List<Cliente> list){
-        fs.stampaFatturabilePerSpesa(list);
-    }
+    public void stampaClientiPerSpesa(List<Cliente> list){fs.stampaFatturabilePerSpesa(list);}
+
+    // metodo che stampa i nomi dei clienti ordinati per spesa effettuata
+    // (legato al comando 2.5 del menù interattivo)
+    public void stampaClientiPerSpesaMedia(List<Cliente> list){fs.stampaFatturabilePerSpesaMedia(list);}
 
     // metodo che stampa i nomi dei clienti ordinati per acquisti effettuati
     // (legato al comando 2.5 del menù interattivo)

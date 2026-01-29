@@ -1,5 +1,6 @@
 package Settimana2.esercizioNegozio.services;
 
+import Settimana2.esercizioNegozio.entities.Cliente;
 import Settimana2.esercizioNegozio.entities.Fatturabile;
 
 import java.util.Comparator;
@@ -90,6 +91,21 @@ public class FatturabileService {
         }
 
     }
+
+    public void stampaFatturabilePerSpesaMedia(List<Cliente> list){
+        if(list.size()>0){
+            System.out.println("Ecco la lista dei clienti ordinati per spesa media:");
+            list.stream()
+                    .sorted(Comparator.comparing(Cliente::getSpesaMedia).reversed())
+                    .forEach(cliente -> System.out.println(cliente.toStringSpesaMedia()));
+            System.out.println("");
+        }
+        else{
+            System.out.println("Nessun elemento presente nella lista\n");
+        }
+
+    }
+
 
     public void stampaFatturabilePerAcquisti(List<? extends Fatturabile> list){
         if(list.size()>0){

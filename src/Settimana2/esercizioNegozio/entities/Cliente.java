@@ -86,6 +86,18 @@ public class Cliente extends Fatturabile {
 
     }
 
+    public String toStringSpesaMedia(){
+
+        String prodottiAcquistati = getAcquistiTotali()!=0?"spesa media = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getSpesaMedia()):"nessun prodotto acquistato";
+
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+" ")
+                .append(getCognome()+": ")
+                .append(prodottiAcquistati);
+
+        return response.toString();
+    }
+
     @Override
     public String toStringAcquisti(){
         StringBuilder response = new StringBuilder();
@@ -95,6 +107,13 @@ public class Cliente extends Fatturabile {
 
         return response.toString();
 
+    }
+
+    public double getSpesaMedia(){
+        if(mappaProdotti.isEmpty()){
+            return 0.0;
+        }
+        return getSpesaTotale()/getAcquistiTotali();
     }
 
 

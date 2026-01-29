@@ -1,7 +1,11 @@
 package Settimana2.esercizioNegozio.services;
 
-import Settimana2.esercizioNegozio.entities.*;
+import Settimana2.esercizioNegozio.entities.Cliente;
+import Settimana2.esercizioNegozio.entities.Fattura;
+import Settimana2.esercizioNegozio.entities.Genere;
+import Settimana2.esercizioNegozio.entities.Prodotto;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 public class Negozio {
@@ -69,6 +73,7 @@ public class Negozio {
                 "Digitare 2 per visualizzare informazioni relative ai clienti\n"+
                 "Digitare 3 per visualizzare informazioni relative ai prodotti\n"+
                 "Digitare 4 per visualizzare la lista delle fatture emesse\n"+
+                "Digitare 5 per visualizzare il numero di prodotti acquistati e la spesa media\n"+
                 "Digitare qualunque altra chiave per uscire dal programma");
     }
 
@@ -78,7 +83,8 @@ public class Negozio {
                 "Digitare 2 per visualizzare il cliente che ha speso di più\n"+
                 "Digitare 3 per visualizzare il cliente che ha acquistato più prodotti\n"+
                 "Digitare 4 per visualizzare la lista di clienti in ordine decrescente per spesa effettuata\n"+
-                "Digitare 5 per visualizzare la lista di clienti in ordine decrescente per numero di prodotti acqusitati\n"+
+                "Digitare 5 per visualizzare la lista di clienti in ordine decrescente per spesa media per prodotto\n"+
+                "Digitare 6 per visualizzare la lista di clienti in ordine decrescente per numero di prodotti acqusitati\n"+
                 "Digitare qualunque altra chiave per tornare al menù principale");
     }
 
@@ -115,6 +121,9 @@ public class Negozio {
                 cs.stampaClientiPerSpesa(listaClienti);
                 break;
             case "5":
+                cs.stampaClientiPerSpesaMedia(listaClienti);
+                break;
+            case "6":
                 cs.stampaClientiPerAcquisti(listaClienti);
                 break;
             default:
@@ -332,6 +341,29 @@ public class Negozio {
     }
 
 
+    // metodo che stampa la somma totale degli acquisti e la spesa media per prodotto
+    // (legato al comando 5 del menù interattivo)
+    public void stampaStatistiche(){
+
+        int acquistiTotali = listaClienti.stream()
+                .mapToInt(cliente -> cliente.getAcquistiTotali()).sum();
+
+        double prezzoTotale = listaClienti.stream()
+                .mapToDouble(cliente -> cliente.getSpesaTotale()).sum();
+
+        double spesaMedia = prezzoTotale/acquistiTotali;
+
+
+
+        StringBuilder response = new StringBuilder();
+        response.append("In totale sono stati spesi "+ NumberFormat.getCurrencyInstance(Locale.ITALY).format(prezzoTotale)+"\n")
+                .append("In media sono stati spesi "+ NumberFormat.getCurrencyInstance(Locale.ITALY).format(spesaMedia)+" per prodotto e sono stati acquistati "+acquistiTotali+" prodotti\n");
+
+
+        System.out.println(response);
+    }
+
+
 
 
 
@@ -366,6 +398,10 @@ public class Negozio {
 
                 case "4":
                     stampaFatture();
+                    break;
+
+                case "5":
+                    stampaStatistiche();
                     break;
 
                 default:
