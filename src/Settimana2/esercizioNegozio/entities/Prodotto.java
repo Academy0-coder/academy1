@@ -1,34 +1,19 @@
 package Settimana2.esercizioNegozio.entities;
 
-public class Prodotto {
+import java.text.NumberFormat;
+import java.util.Locale;
 
-    private int id;
-    String nome;
-    double prezzo;
-    int quantita;
+public class Prodotto extends Fatturabile {
 
+    private double prezzo;
+    private int quantita;
+    final private Genere genere;
 
-    public Prodotto(int id, String nome, double prezzo, int quantita) {
-        this.id = id;
-        this.nome = nome;
-        this.prezzo = prezzo;
+    public Prodotto(int id, String nome, double prezzo, int quantita, Genere genere) {
+        super(id, nome);
+        this.genere = genere;
         this.quantita = quantita;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
+        this.prezzo = prezzo;
     }
 
     public double getPrezzo() {
@@ -46,4 +31,37 @@ public class Prodotto {
     public void setQuantita(int quantita) {
         this.quantita = quantita;
     }
+
+    public Genere getGenere() {return genere;}
+
+
+    @Override
+    public String toString(){
+        StringBuilder message = new StringBuilder();
+        message.append("Prodotto: "+getNome()+": ")
+                .append("Id = "+getId()+", ")
+                .append("quantità ancora in magazzino = "+getQuantita());
+        return message.toString();
+    }
+
+    @Override
+    public String toStringSpesa(){
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+": ")
+                .append("spesa effettuata = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getPrezzo()* getAcquistiTotali()));
+
+        return response.toString();
+
+    }
+
+    @Override
+    public String toStringAcquisti(){
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+": ")
+                .append("acquisti totali = "+ getAcquistiTotali());
+
+        return response.toString();
+
+    }
+
 }
