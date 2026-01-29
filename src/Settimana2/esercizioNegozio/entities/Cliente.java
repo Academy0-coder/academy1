@@ -1,38 +1,22 @@
 package Settimana2.esercizioNegozio.entities;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class Cliente {
+public class Cliente extends Fatturabile {
 
-    private int id;
-    private String nome;
     private String cognome;
     private Map<Prodotto,Integer> mappaProdotti;
     private List<Fattura> listaFatture;
 
+
     public Cliente(int id, String nome, String cognome, Map<Prodotto, Integer> mappaProdotti, List<Fattura> listaFatture) {
-        this.id = id;
-        this.nome = nome;
+        super(id,nome);
         this.cognome = cognome;
         this.mappaProdotti = mappaProdotti;
         this.listaFatture = listaFatture;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getCognome() {
@@ -59,12 +43,13 @@ public class Cliente {
         this.listaFatture = listaFatture;
     }
 
+
     @Override
     public String toString(){
         StringBuilder response = new StringBuilder();
-        response.append(nome)
-                .append(" ")
-                .append(cognome)
+        response.append(getNome()+" ")
+                .append(cognome+", ")
+                .append("Id = "+getId())
                 .append(":\n");
 
         if(mappaProdotti.isEmpty()){
@@ -72,9 +57,11 @@ public class Cliente {
         }
 
         else{
+
             response.append("Acquistati prodotti di ")
                     .append(mappaProdotti.size())
-                    .append(" tipologie diverse\n");
+                    .append(" tipologi"+(mappaProdotti.size()==1?"a":"e"))
+                    .append(" divers"+(mappaProdotti.size()==1?"a":"e")+"\n");
             mappaProdotti
                     .keySet()
                     .stream()
@@ -85,8 +72,48 @@ public class Cliente {
 
         }
 
+        return response.toString();
+    }
+
+    @Override
+    public String toStringSpesa(){
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+" ")
+                .append(getCognome()+": ")
+                .append("spesa effettuata = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getSpesaTotale()));
 
         return response.toString();
+
+    }
+
+    public String toStringSpesaMedia(){
+
+        String prodottiAcquistati = getAcquistiTotali()!=0?"spesa media = "+NumberFormat.getCurrencyInstance(Locale.ITALY).format(getSpesaMedia()):"nessun prodotto acquistato";
+
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+" ")
+                .append(getCognome()+": ")
+                .append(prodottiAcquistati);
+
+        return response.toString();
+    }
+
+    @Override
+    public String toStringAcquisti(){
+        StringBuilder response = new StringBuilder();
+        response.append(getNome()+" ")
+                .append(getCognome()+": ")
+                .append(getAcquistiTotali()+" prodotti acquistati");
+
+        return response.toString();
+
+    }
+
+    public double getSpesaMedia(){
+        if(mappaProdotti.isEmpty()){
+            return 0.0;
+        }
+        return getSpesaTotale()/getAcquistiTotali();
     }
 
 
