@@ -7,5 +7,5 @@ public interface Passaggio {
     public String getStazione();
     public int getOra();
     public int getMinuti();
-    public LocalTime ritardo();
+    public int ritardo();
 }

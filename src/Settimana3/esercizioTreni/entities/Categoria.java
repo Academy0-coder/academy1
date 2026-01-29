@@ -5,6 +5,6 @@ public enum Categoria {
     Intercity,
     Eurostar,
     Interregionale,
-    Regionale
+    Regionale;
 
 }

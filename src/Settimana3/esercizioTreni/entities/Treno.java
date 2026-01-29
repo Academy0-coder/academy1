@@ -8,7 +8,10 @@ public interface Treno {
     public int getGiorno();
     public int getMese();
     public int getAnno();
-    public void registraPassaggio(String stazione, int ora, int minuti);
+    public void registraPassaggio(Fermata fermata, int ora, int minuti, boolean last);
+    public boolean arrivato();
+    public int ritardoMassimo();
+    public int ritardoFinale();
 
 
 }
